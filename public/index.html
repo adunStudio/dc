@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Adun</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/bootstrap-select.min.css"/>
+    <style>
+        @media (min-width: 992px) {
+            .modal-lg {  width: 1000px;  }
+        }
+
+    </style>
+</head>
+<body class="well" >
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+
+    </div>
+</div>
+
+<div class="container">
+    <div class="clearfix">
+        <div class="col-xs-12">
+            <div class="page-header clearfix ">
+                <p class="pull-left">
+                    <select class="selectpicker show-tick" data-header="갤러리" data-live-search="true" data-style="btn-default"  data-size="7">
+                        <option value="programming">프로그래밍</option>
+                        <option value="acbs">학점은행제</option>
+                        <option value="kpu">한국산업기술대</option>
+                    </select>
+                </p>
+
+                <p class="pull-right">
+                    <span class="text-success text-center"><strong id="gall_name">프로그래밍 갤러리</strong></span>
+                    <!--<br>
+                    <span class="text-muted"><strong>Total 293</strong></span>-->
+                </p>
+            </div>
+            <table class="table table-condensed table-hover">
+                <thead>
+                    <tr>
+                        <td class="text-center">번호</td>
+                        <td class="text-center">제목</td>
+                        <td class="text-center">글쓴이</td>
+                        <td class="text-center">날짜</td>
+                        <td class="text-center">조회</td>
+                        <td class="text-center">추천</td>
+                    </tr>
+                </thead>
+                <tbody id="list">
+
+                </tbody>
+            </table>
+
+            <div>
+                <button type="button" class="btn btn-success pull-right" style="width: 20%;" id="write_btn">글쓰기</button>
+            </div>
+            <!-- view modal -->
+            <div class="modal fade bd-example-modal-lg" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="padding:0;">
+                <div class="modal-dialog modal-lg" role="document" >
+                    <div class="modal-content" >
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <p class="pull-left">
+                                제목: <strong id="view_title"></strong>
+                                <br>
+                                <span>글쓴이  <span id="view_name"></span><em id="view_img"></em></span> l
+                                <span>조회    <span id="view_read"></span></span> l
+                                <span>댓글  <span id="view_comment"></span></span>
+                            </p>
+
+                            <p class="pull-right">
+                                <span class="text-success text-center"><strong id="gall_name2">프로그래밍 갤러리</strong></span><br>
+                                <span id="view_date"></span><br>
+                                <span id="view_ip"></span>
+
+                            </p>
+
+                        </div>
+                        <div class="modal-body" id="view_contents">
+
+                        </div>
+                        <div class="modal-footer">
+                            <table class="table table-striped" id="comment_table">
+
+                            </table>
+                            <form name="comment_write" id="comment_write" accept-charset="utf-8" method="post" action="#">
+                                <div style="display: none;">
+                                    <!--<input type="hidden" name="ip" value="116.249.162.212">-->
+                                    <input type="hidden" name="mode" value="comment_nonmember">
+                                    <input type="hidden" name="no" id="view_idx">
+                                    <input type="hidden" name="id" id="gall_id" value="programming">
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2" style="margin-right: 0;">
+                                        <input type="text" name="comment_nick" id="comment_nick" class="form-control" placeholder="닉네임" style="margin-bottom: 3px; margin-right: 0; padding-right: 0;" required>
+                                        <input type="password" name="comment_pw" id="comment_pw" class="form-control" placeholder="비밀번호" style="margin-right:0;" required>
+                                    </div>
+                                    <div class="col-xs-10" style="padding-left:0; margin-left:0;">
+                                        <textarea name="comment_memo" id="comment_memo" maxlength="400" class="form-control" placeholder="text..." style="height: 71px;" required></textarea>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-success" style="margin-top: 10px;" id="comment_btn">등록</button>
+                                <button type="button" class="btn btn-warning" data-dismiss="modal" style="margin-top: 10px;">목록</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- / view modal -->
+
+
+            <!-- write modal -->
+            <div class="modal fade bd-example-modal-lg" id="writeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="padding:0;">
+                <div class="modal-dialog modal-lg" role="document" >
+                    <div class="modal-content" >
+                        <form name="write" id="write" accept-charset="utf-8" method="post" enctype="multipart/form-data" action="#">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <p class="pull-left">
+                                <span class="text-success text-center"><strong id="gall_name3">프로그래밍 갤러리</strong></span><br>
+                            </p>
+                            <br>
+                            <br>
+                                <div style="display: none;">
+                                    <input type="hidden" name="mode" value="write">
+                                    <input type="hidden" name="filter" value="1">
+                                    <input type="hidden" name="id" id="gall_id2" value="programming">
+                                    <input type="hidden" name="ci_t" id="ci_t"/>
+                                    <input type="hidden" name="block_key" id="block_key"/>
+                                    <input type="hidden" name="r_key" id="r_key"/>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6" style="margin-right: 0;padding-right: 10px;">
+                                        <input type="text" name="name" id="name" class="form-control" placeholder="닉네임" style="margin-bottom: 3px;" required>
+                                    </div>
+                                    <div class="col-xs-6" style="margin-right: 0; margin-left: 0; padding-left: 0;">
+                                        <input type="text" name="password" id="password" class="form-control" placeholder="비밀번호" style="margin-bottom: 3px; margin-left: 0;" required>
+                                    </div>
+                                    <div class="col-xs-12" style="margin-right: 0;">
+                                        <input type="text" name="subject" id="subject" class="form-control" placeholder="제목" style="margin-bottom: 3px;" required>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="modal-body">
+                            <textarea class="form-control" name="memo" id="memo" rows="9" placeholder="내용을 입력해주세요."></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success" style="margin-top: 10px;" id="write_comfirm_btn">등록완료</button>
+                            <button type="button" class="btn btn-warning" data-dismiss="modal" style="margin-top: 10px;">목록</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- / write modal -->
+
+            <nav class="text-center" id="pagination">
+                <ul class="pagination">
+                    <li class="page-item" id="prev">
+                        <a class="page-link" href="#" aria-label="Previous" data-page="prev">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </li>
+                </ul>
+                <ul class="pagination" id="paging">
+                    <li class="page-item active"><a class="page-link" href="#" data-page="1">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#" data-page="2">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#" data-page="3">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#" data-page="4">4</a></li>
+                    <li class="page-item"><a class="page-link" href="#" data-page="5">5</a></li>
+                    <li class="page-item"><a class="page-link" href="#" data-page="6">6</a></li>
+                    <li class="page-item"><a class="page-link" href="#" data-page="7">7</a></li>
+                    <li class="page-item"><a class="page-link" href="#" data-page="8">8</a></li>
+                    <li class="page-item"><a class="page-link" href="#" data-page="9">9</a></li>
+                    <li class="page-item"><a class="page-link" href="#" data-page="10">10</a></li>
+                    <li class="page-item"><a class="page-link" href="#" data-page="11">11</a></li>
+                    <li class="page-item"><a class="page-link" href="#" data-page="12">12</a></li>
+                    <li class="page-item"><a class="page-link" href="#" data-page="13">13</a></li>
+                    <li class="page-item"><a class="page-link" href="#" data-page="14">14</a></li>
+                    <li class="page-item"><a class="page-link" href="#" data-page="15">15</a></li>
+                </ul>
+                <ul class="pagination">
+                    <li class="page-item" id="next">
+                        <a class="page-link" href="#" aria-label="Next" data-page="next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="text-center">
+
+                <form name="newItemForm" class="form-inline" action="">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="s_keyword" >
+                    </div>
+                    <button type="submit" class="btn btn-default" id="search_btn">검색</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+<script>window.$ = window.jQuery = require('./js/jquery.min.js');</script>
+<script src="./js/jquery.tmpl.min.js"></script>
+<script src="./js/bootstrap.min.js"></script>
+<script src="./js/bootstrap-select.js"></script>
+<script id="list_tmp" type="text/html">
+    <tr class='${className}'>
+        <td class='text-center'>${idx}</td>
+        <td class="text-center"><a href="#" data-idx='${idx}'>${title} ${comment}</a></td>
+        <td class="text-center">${name}{{if img}}<img src="${img}" border="0" width="12" height="15" style="margin-left: 3px;">{{/if}}</td>
+        <td class="text-center">${date}</td>
+        <td class="text-center">${read}</td>
+        <td class="text-center">${hit}</td>
+    </tr>
+</script>
+<script id="pagination_tmp" type="text/html">
+    <li class="page-item ${active}"><a class="page-link" href="#" data-page="${page}">${page}</a></li>
+</script>
+<script id="comment_tmp" type="text/html">
+    <tr>
+        <td class='text-left' style="width: 15%; vertical-align: middle;">${name}{{if img}}<img src="${img}" border="0" width="12" height="15" style="margin-left: 3px;">{{/if}}</td>
+        <td class="text-left">${contents} {{if ip}} | <small>${ip} </small>{{/if}} </td>
+        <td class="text-right" style="width: 15%; vertical-align: middle;"><small>${date}</small></td>
+    </tr>
+</script>
+<script src="./js/adun.js"></script>

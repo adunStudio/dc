@@ -1,0 +1,18 @@
+{
+  "name": "Adun Dc",
+  "version": "0.0.1",
+  "description": "dcinside pharsing application with node.js and electron.js",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron main.js"
+  },
+  "author": "adun",
+  "license": "MIT",
+  "dependencies": {
+    "cheerio": "^0.20.0",
+    "electron-prebuilt": "^1.2.3",
+    "jquery": "^3.0.0",
+    "request": "^2.72.0"
+  }
+}
