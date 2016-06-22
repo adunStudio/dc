@@ -4,6 +4,11 @@
 
 const phaser = require('../lib/phaser.js');
 const s_type = 'search_all';    // 무조건 전체 검색
+const ctrl_key = 17;
+const space_key = 32;
+var keyboard= {};
+keyboard[ctrl_key] = false;
+keyboard[space_key] = false;
 
 (function() {
     var id = 'programming';  // default
@@ -211,6 +216,21 @@ const s_type = 'search_all';    // 무조건 전체 검색
         //var f = $('#write');
         //var s = f.serialize();
         getBlock($('#gall_id2').val(), $('#ci_t').val(), $('#block_key').val())
+    });
+
+    $(document).on('keydown', function(event){
+        var key = event.keyCode;
+        keyboard[key] = true;
+        if(keyboard[ctrl_key] && keyboard[space_key]) {
+            $('#comment_btn').trigger('click');
+        }
+
+    });
+    $(document).on('keyup', function(event) {
+        var key = event.keyCode;
+        console.log(key);
+        keyboard[key] = false;
+
     });
 
 

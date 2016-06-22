@@ -1,5 +1,5 @@
 {
-  "name": "Adun Dc",
+  "name": "Adun",
   "version": "0.0.1",
   "description": "dcinside pharsing application with node.js and electron.js",
   "main": "main.js",
