@@ -2,6 +2,7 @@
  * Created by hong on 2016-06-20.
  */
 
+
 const phaser = require('../lib/phaser.js');
 const s_type = 'search_all';    // 무조건 전체 검색
 const ctrl_key = 17;
@@ -15,6 +16,7 @@ keyboard[space_key] = false;
     var searchMode = false;   // 검색모드(초기 false)
     var searchReady = true;   // 무한스크롤 비동기를 위한 검색 ready (비동기 함수가 끝나면 true)
     var s_keyword = '';       // 검색 키워드
+    var PROXY = false;        // 프록시 사용 상태
 
     var page = {
         startPage: 1,
@@ -61,13 +63,13 @@ keyboard[space_key] = false;
     }
 
     function postComment(idx, string) {
-        phaser.comment_write(id, idx, string, function(no) {
+        phaser.comment_write(id, idx, string, PROXY, function(obj, no) {
+            if(obj.msg == 44) {
+                alert(obj.data);
+                return;
+            }
             getComment(no);
         });
-    }
-
-    function postWrite(string) {
-        phaser.write(id, string);
     }
 
     function setView(viewArray) {
@@ -78,8 +80,7 @@ keyboard[space_key] = false;
     }
 
     function getWritePage() {
-        phaser.writePage(id, function(hidden) {
-            console.log(hidden);
+        phaser.writePage(id, PROXY, function(hidden) {
             $('#block_key').val(hidden.block_key);
             $('#ci_t').val(hidden.ci_t);
             $('#r_key').val(hidden.r_key);
@@ -87,7 +88,28 @@ keyboard[space_key] = false;
     }
 
     function getBlock(id, ci_t, block_key) {
-        phaser.getBlock(id, ci_t, block_key, $.param({id: id, ci_t: ci_t, block_key: block_key}));
+        phaser.getBlock(id, ci_t, block_key, $.param({ci_t: ci_t, id: id, block_key: block_key}), PROXY, function(newBlock_key){
+            postWrite(newBlock_key);
+        });
+    }
+
+    function postWrite(newBlock_key) {
+        $('#block_key').val(newBlock_key);
+        var f = $('#write');
+        var s = f.serialize();
+        phaser.article_write(id, s, PROXY, function(code) {
+            var isSuccess = code.split('||')[0];
+            if(isSuccess == 'true') {
+                var idx = code.split('||')[1];
+                $('#writeModal').modal('hide');
+                getView(idx);
+                getComment(idx);
+            } else {
+                alert(code.split('||')[1]);
+                $('#writeModal').modal('hide');
+            }
+
+        });
     }
 
     // 페이징 선택
@@ -190,31 +212,41 @@ keyboard[space_key] = false;
         searchReady = true;
     });
 
-
+    // 댓글 쓰기 버튼 클릭
     $('#comment_btn').on('click', function(event) {
         event.preventDefault();
         if(!$('#comment_memo').val() || !$('#comment_nick').val() || !$('#comment_pw').val()) {
             return;
         }
         var f = $('#comment_write');
+        var memo = $('#comment_memo').val() + "   - oppacoding";
+        $('#comment_memo').val(memo);
+
         var idx = $('#view_idx').val();
         var s = f.serialize();
         $('#comment_memo').val('');
         postComment(idx, s);
     });
 
+    // 글쓰기 버튼 클릭
     $('#write_btn').on('click', function() {
         $('#writeModal').modal('show');
         getWritePage();
     });
 
+    $('#writeModal').on('shown.bs.modal', function() {
+        $('#subject').focus();
+    });
+    $('#viewModal').on('shown.bs.modal', function() {
+        $('#comment_memo').focus();
+    });
+
+    // 글 쓰기 완료 버튼 클릭
     $('#write_comfirm_btn').on('click', function(event) {
         event.preventDefault();
         if(!$('#name').val() || !$('#password').val() || !$('#subject').val() || !$('#memo')) {
             return;
         }
-        //var f = $('#write');
-        //var s = f.serialize();
         getBlock($('#gall_id2').val(), $('#ci_t').val(), $('#block_key').val())
     });
 
@@ -228,10 +260,15 @@ keyboard[space_key] = false;
     });
     $(document).on('keyup', function(event) {
         var key = event.keyCode;
-        console.log(key);
         keyboard[key] = false;
 
     });
+
+    $("#proxy_switch").bootstrapSwitch().on('switchChange.bootstrapSwitch', function(event, state) {
+        PROXY = state;
+    });
+
+
 
 
     getList(1);

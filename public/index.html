@@ -5,6 +5,7 @@
     <title>Adun</title>
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" href="css/bootstrap-select.min.css"/>
+    <link rel="stylesheet" href="css/bootstrap-switch.min.css"/>
     <style>
         @media (min-width: 992px) {
             .modal-lg {  width: 1000px;  }
@@ -23,19 +24,17 @@
     <div class="clearfix">
         <div class="col-xs-12">
             <div class="page-header clearfix ">
-                <p class="pull-left">
+                <div class="pull-left">
                     <select class="selectpicker show-tick" data-header="갤러리" data-live-search="true" data-style="btn-default"  data-size="7">
                         <option value="programming">프로그래밍</option>
                         <option value="acbs">학점은행제</option>
                         <option value="kpu">한국산업기술대</option>
                     </select>
-                </p>
-
-                <p class="pull-right">
-                    <span class="text-success text-center"><strong id="gall_name">프로그래밍 갤러리</strong></span>
-                    <!--<br>
-                    <span class="text-muted"><strong>Total 293</strong></span>-->
-                </p>
+                </div>
+                <div class="pull-right">
+                    <h2 class="pull-left h4">PROXY: &nbsp;</h2>
+                    <input type="checkbox" name="my-checkbox" class="alert-danger pull-right" data-handle-width="100" id="proxy_switch" data-on-color="warning" data-off-color="danger"  style="height: 30%;">
+                </div>
             </div>
             <table class="table table-condensed table-hover">
                 <thead>
@@ -96,8 +95,8 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-2" style="margin-right: 0;">
-                                        <input type="text" name="comment_nick" id="comment_nick" class="form-control" placeholder="닉네임" style="margin-bottom: 3px; margin-right: 0; padding-right: 0;" required>
-                                        <input type="password" name="comment_pw" id="comment_pw" class="form-control" placeholder="비밀번호" style="margin-right:0;" required>
+                                        <input type="text" name="comment_nick" id="comment_nick" class="form-control" placeholder="닉네임" style="margin-bottom: 3px; margin-right: 0; padding-right: 0;" value="아둔" required>
+                                        <input type="password" name="comment_pw" id="comment_pw" class="form-control" placeholder="비밀번호" style="margin-right:0;" value="1231" required>
                                     </div>
                                     <div class="col-xs-10" style="padding-left:0; margin-left:0;">
                                         <textarea name="comment_memo" id="comment_memo" maxlength="400" class="form-control" placeholder="text..." style="height: 71px;" required></textarea>
@@ -128,19 +127,19 @@
                             <br>
                             <br>
                                 <div style="display: none;">
-                                    <input type="hidden" name="mode" value="write">
-                                    <input type="hidden" name="filter" value="1">
                                     <input type="hidden" name="id" id="gall_id2" value="programming">
                                     <input type="hidden" name="ci_t" id="ci_t"/>
                                     <input type="hidden" name="block_key" id="block_key"/>
                                     <input type="hidden" name="r_key" id="r_key"/>
+                                    <input type="hidden" name="upload_status" id="upload_status" value="N"/>
+                                    <input type="hidden" name="campus" id="campus" value="0"/>
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-6" style="margin-right: 0;padding-right: 10px;">
-                                        <input type="text" name="name" id="name" class="form-control" placeholder="닉네임" style="margin-bottom: 3px;" required>
+                                        <input type="text" name="name" id="name" class="form-control" placeholder="닉네임" style="margin-bottom: 3px;" value="아둔" required>
                                     </div>
                                     <div class="col-xs-6" style="margin-right: 0; margin-left: 0; padding-left: 0;">
-                                        <input type="text" name="password" id="password" class="form-control" placeholder="비밀번호" style="margin-bottom: 3px; margin-left: 0;" required>
+                                        <input type="text" name="password" id="password" class="form-control" placeholder="비밀번호" style="margin-bottom: 3px; margin-left: 0;" value="1231" required>
                                     </div>
                                     <div class="col-xs-12" style="margin-right: 0;">
                                         <input type="text" name="subject" id="subject" class="form-control" placeholder="제목" style="margin-bottom: 3px;" required>
@@ -152,7 +151,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-success" style="margin-top: 10px;" id="write_comfirm_btn">등록완료</button>
-                            <button type="button" class="btn btn-warning" data-dismiss="modal" style="margin-top: 10px;">목록</button>
+                            <button type="button" class="btn btn-warning" data-dismiss="modal" style="margin-top: 10px;">취소</button>
                         </div>
                         </form>
                     </div>
@@ -214,6 +213,7 @@
 <script src="./js/jquery.tmpl.min.js"></script>
 <script src="./js/bootstrap.min.js"></script>
 <script src="./js/bootstrap-select.js"></script>
+<script src="./js/bootstrap-switch.min.js"></script>
 <script id="list_tmp" type="text/html">
     <tr class='${className}'>
         <td class='text-center'>${idx}</td>
@@ -234,4 +234,4 @@
         <td class="text-right" style="width: 15%; vertical-align: middle;"><small>${date}</small></td>
     </tr>
 </script>
-<script src="./js/adun.js"></script>
+<script src="../adun.js"></script>
